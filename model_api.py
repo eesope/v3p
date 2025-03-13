@@ -31,8 +31,16 @@ async def generate_story(prompt: str = "Three cats are"):
         "generated_text": generated_text
     }
 
+@app.get("/")
+async def health_check():
+    return {"status": "OK"}
+
+
 # manual start server:
 # uvicorn model_api:app --reload --log-level debug
 
 # query via url
 # http://url/generate_story?prompt=Three%20cats%20are
+
+# runtime command
+# uvicorn model_api:app --host 0.0.0.0 --port 8000
