@@ -20,7 +20,6 @@ def load_model():
 
 @app.get("/generate_story")
 async def generate_story(prompt: str = "Three cats are"):
-    # 첫 요청 시 모델과 토크나이저를 로드합니다.
     tokenizer, model = load_model()
     
     input_ids = tokenizer(prompt, return_tensors="pt").input_ids
