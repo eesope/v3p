@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import os
@@ -11,17 +12,19 @@ model_name = "mosaicml/mpt-7b-storywriter"
 tokenizer = None
 model = None
 
-def load_model():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     global tokenizer, model
-    if tokenizer is None or model is None:
-        tokenizer = AutoTokenizer.from_pretrained(model_name)
-        model = AutoModelForCausalLM.from_pretrained(model_name)
-    return tokenizer, model
+    print("Loading model and tokenizer...")
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModelForCausalLM.from_pretrained(model_name)
+    print("Model and tokenizer loaded.")
+    yield 
+
+app = FastAPI(lifespan=lifespan)
 
 @app.get("/generate_story")
-async def generate_story(prompt: str = "Three cats are"):
-    tokenizer, model = load_model()
-    
+async def generate_story(prompt: str = "Three cats are"):    
     input_ids = tokenizer(prompt, return_tensors="pt").input_ids
     output = model.generate(input_ids, max_length=5, num_return_sequences=1)
     generated_text = tokenizer.decode(output[0], skip_special_tokens=True)
@@ -43,4 +46,4 @@ async def health_check():
 # http://url/generate_story?prompt=Three%20cats%20are
 
 # runtime command
-# uvicorn model_api:app --host 0.0.0.0 --port 8000
+# uvicorn model_api:app --host 0.0.0.0 --port #
