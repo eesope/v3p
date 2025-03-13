@@ -23,7 +23,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-@app.get("/generate-txt")
+@app.get("/generate_txt")
 async def generate_txt(prompt: str):   
     # prompt = data.get("prompt", "Three cats are") # if @app.post
     start_inference = time.perf_counter()
