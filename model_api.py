@@ -37,17 +37,13 @@ app = FastAPI(lifespan=lifespan)
 @app.get("/t2t")
 async def generate_txt(prompt: str):   
 
-    input_text = "translate English to French: What is your name?"
-    # prompt = data.get("prompt", "Three cats are") # if @app.post
-    start_inference = time.perf_counter()
+    input_text = prompt
+    start_inference = time.perf_counter() # to calculate time performance
 
     input_ids = tokenizer(input_text, return_tensors="pt").input_ids
 
     outputs = model.generate(input_ids)
     result = tokenizer.decode(outputs[0])
-
-    # output = model.generate(prompt, max_length=5, num_return_sequences=1)
-    # generated_text = tokenizer.decode(output[0], skip_special_tokens=True)
     
     inference_time = time.perf_counter() - start_inference
     print(f"Inference for prompt '{prompt}' took {inference_time:.2f} seconds.")

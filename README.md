@@ -11,4 +11,4 @@ uvicorn model_api:app --host 0.0.0.0 --port #
 ```
 
 3. query via url
-url/generate-txt?prompt=Three%20cats%20are
+url/t2t?prompt=some_query
